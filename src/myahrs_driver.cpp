@@ -88,7 +88,7 @@ public:
     // default frame id
     nh_priv_.param("frame_id", frame_id_, std::string("imu_link"));
     // for testing the tf
-    nh_priv_.param("parent_frame_id_", parent_frame_id_, std::string("base_link"));
+    nh_priv_.param("child_frame_id", parent_frame_id_, std::string("base_link"));
     // defaults obtained experimentally from device
     nh_priv_.param("linear_acceleration_stddev", linear_acceleration_stddev_, 0.026831);
     nh_priv_.param("angular_velocity_stddev", angular_velocity_stddev_, 0.002428);
@@ -180,8 +180,8 @@ public:
 
     // original sensor data used the degree unit, convert to radian (see ROS REP103)
     // we used the ROS's axes orientation like x forward, y left and z up
-    // so changed the y and z aixs of myAHRS+ board
-    roll  =  sensor_data_.euler_angle.roll*convertor_d2r;
+    // so changed the y and z axis of myAHRS+ board
+    roll  = sensor_data_.euler_angle.roll*convertor_d2r;
     pitch = -sensor_data_.euler_angle.pitch*convertor_d2r;
     yaw   = -sensor_data_.euler_angle.yaw*convertor_d2r;
 
@@ -231,14 +231,14 @@ public:
 
     // publish the IMU data
     imu_data_raw_pub_.publish(imu_data_raw_msg);
-    imu_data_pub_.publish(imu_data_msg);
+    //imu_data_pub_.publish(imu_data_msg);
     imu_mag_pub_.publish(imu_magnetic_msg);
     imu_temperature_pub_.publish(imu_temperature_msg);
 
     // publish tf
     broadcaster_.sendTransform(tf::StampedTransform(tf::Transform(tf::createQuaternionFromRPY(roll, pitch, yaw),
                                                                   tf::Vector3(0.0, 0.0, 0.0)),
-                                                    ros::Time::now(), frame_id_, parent_frame_id_));
+                                                    ros::Time::now(), parent_frame_id_, frame_id_));
   }
 };
 
