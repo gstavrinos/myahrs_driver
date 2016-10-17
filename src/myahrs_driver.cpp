@@ -88,7 +88,7 @@ public:
     // default frame id
     nh_priv_.param("frame_id", frame_id_, std::string("imu_link"));
     // for testing the tf
-    nh_priv_.param("child_frame_id", parent_frame_id_, std::string("base_link"));
+    nh_priv_.param("parent_frame_id", parent_frame_id_, std::string("base_link"));
     // defaults obtained experimentally from device
     nh_priv_.param("linear_acceleration_stddev", linear_acceleration_stddev_, 0.026831);
     nh_priv_.param("angular_velocity_stddev", angular_velocity_stddev_, 0.002428);
@@ -96,7 +96,7 @@ public:
     nh_priv_.param("orientation_stddev", orientation_stddev_, 0.002143);
     // publisher for streaming
     imu_data_raw_pub_   = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
-    imu_data_pub_       = nh_.advertise<sensor_msgs::Imu>("imu/data", 1);
+    imu_data_pub_       = nh_.advertise<sensor_msgs::Imu>("imu/data_sensored_filtered", 1);
     imu_mag_pub_        = nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);
     imu_temperature_pub_= nh_.advertise<std_msgs::Float64>("imu/temperature", 1);
   }
@@ -231,7 +231,7 @@ public:
 
     // publish the IMU data
     imu_data_raw_pub_.publish(imu_data_raw_msg);
-    //imu_data_pub_.publish(imu_data_msg);
+    imu_data_pub_.publish(imu_data_msg);
     imu_mag_pub_.publish(imu_magnetic_msg);
     imu_temperature_pub_.publish(imu_temperature_msg);
 
