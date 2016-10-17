@@ -96,7 +96,7 @@ public:
     nh_priv_.param("orientation_stddev", orientation_stddev_, 0.002143);
     // publisher for streaming
     imu_data_raw_pub_   = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
-    imu_data_pub_       = nh_.advertise<sensor_msgs::Imu>("imu/data_sensored_filtered", 1);
+    imu_data_pub_       = nh_.advertise<sensor_msgs::Imu>("imu/data_sensor_filtered", 1);
     imu_mag_pub_        = nh_.advertise<sensor_msgs::MagneticField>("imu/mag", 1);
     imu_temperature_pub_= nh_.advertise<std_msgs::Float64>("imu/temperature", 1);
   }
