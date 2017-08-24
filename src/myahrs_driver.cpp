@@ -64,6 +64,7 @@ private:
   double angular_velocity_stddev_;
   double magnetic_field_stddev_;
   double orientation_stddev_;
+  bool publish_tf_;
 
   void OnSensorData(int sensor_id, SensorData data)
   {
@@ -94,6 +95,7 @@ public:
     nh_priv_.param("angular_velocity_stddev", angular_velocity_stddev_, 0.002428);
     nh_priv_.param("magnetic_field_stddev", magnetic_field_stddev_, 0.00000327486);
     nh_priv_.param("orientation_stddev", orientation_stddev_, 0.002143);
+    nh_priv_.param("publish_tf_", publish_tf_, false);
     // publisher for streaming
     imu_data_raw_pub_   = nh_.advertise<sensor_msgs::Imu>("imu/data_raw", 1);
     imu_data_pub_       = nh_.advertise<sensor_msgs::Imu>("imu/data_sensor_filtered", 1);
@@ -236,9 +238,11 @@ public:
     imu_temperature_pub_.publish(imu_temperature_msg);
 
     // publish tf
-    broadcaster_.sendTransform(tf::StampedTransform(tf::Transform(tf::createQuaternionFromRPY(roll, pitch, yaw),
+    if(publish_tf_){
+      broadcaster_.sendTransform(tf::StampedTransform(tf::Transform(tf::createQuaternionFromRPY(roll, pitch, yaw),
                                                                   tf::Vector3(0.0, 0.0, 0.0)),
                                                     ros::Time::now(), parent_frame_id_, frame_id_));
+    }
   }
 };
 
